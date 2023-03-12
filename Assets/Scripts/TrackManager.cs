@@ -5,10 +5,18 @@ using UnityEngine;
 
 public class TrackManager : Singleton<TrackManager>
 {
+    [Header("Texts")]
     [SerializeField] private TextMeshPro randomNumberText;
     [SerializeField] private TextMeshProUGUI congratulationsText;
+    
     [SerializeField] private List<Option> options;
-    [SerializeField] private float congratulationsTime = 0.25f;
+    
+    [Header("Variables")]
+    [SerializeField] private float congratulationsTime = 0.5f;
+
+    [Header("Sounds")]
+    [SerializeField] private AudioSource loudOutSound;
+    [SerializeField] private AudioSource encourageSound;
 
     private readonly List<int> _chosenNumbers = new List<int>();
     private int _randomNumber;
@@ -29,6 +37,7 @@ public class TrackManager : Singleton<TrackManager>
         ChooseRandomNumbers(options.Count);
         AssignCorrectNumberFromList(_chosenNumbers);
         AssignOptions();
+        loudOutSound.Play();
     }
     
     void ChooseRandomNumbers(int numbersCount)
@@ -75,7 +84,7 @@ public class TrackManager : Singleton<TrackManager>
     
     void WrongChoice()
     {
-        //TODO: Encourage child
+        encourageSound.Play();
     }
 
     IEnumerator Congratulate()
