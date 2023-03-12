@@ -12,11 +12,12 @@ public class TrackManager : Singleton<TrackManager>
     [SerializeField] private List<Option> options;
     
     [Header("Variables")]
-    [SerializeField] private float congratulationsTime = 0.5f;
+    [SerializeField] private float congratulationsTime = 1f;
 
     [Header("Sounds")]
     [SerializeField] private AudioSource loudOutSound;
     [SerializeField] private AudioSource encourageSound;
+    [SerializeField] private AudioSource congratulationsSound;
 
     private readonly List<int> _chosenNumbers = new List<int>();
     private int _randomNumber;
@@ -89,9 +90,13 @@ public class TrackManager : Singleton<TrackManager>
 
     IEnumerator Congratulate()
     {
+        congratulationsSound.Play();
+        float waitTime = (congratulationsTime < congratulationsSound.clip.length) ? congratulationsSound.clip.length : congratulationsTime;
+        
         ActivateCongratulation(true);
-        yield return new WaitForSeconds(congratulationsTime);
+        yield return new WaitForSeconds(waitTime);
         ActivateCongratulation(false);
+        
         if (_correctAnswerCount < _correctAnswerThreshold)
         {
             NextNumber();
