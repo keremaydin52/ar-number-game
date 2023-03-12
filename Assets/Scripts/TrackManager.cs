@@ -110,6 +110,9 @@ public class TrackManager : Singleton<TrackManager>
     void ActivateCongratulation(bool isActive)
     {
         congratulationsText.gameObject.SetActive(isActive);
+        congratulationsText.transform.localScale = new Vector3(0.8f, 0.8f, 0.8f);
+        congratulationsText.gameObject.LeanScale(new Vector3(1.2f, 1.2f, 1.2f), 0.5f)
+            .setEase(LeanTweenType.linear);
         randomNumberText.gameObject.SetActive(!isActive);
         options.ForEach(p => p.gameObject.SetActive(!isActive));
     }
