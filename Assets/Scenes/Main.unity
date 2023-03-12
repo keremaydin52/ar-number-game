@@ -1933,7 +1933,7 @@ MonoBehaviour:
   - {fileID: 567579285}
   - {fileID: 1221646174}
   - {fileID: 464273795}
-  congratulationsTime: 1
+  congratulationsTime: 0.25
 --- !u!1 &1475921913
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,23 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class TrackManager : Singleton<TrackManager>
 {
     [SerializeField] private TextMeshPro randomNumberText;
     [SerializeField] private TextMeshProUGUI congratulationsText;
     [SerializeField] private List<Option> options;
-    [SerializeField] private float congratulationsTime = 1;
+    [SerializeField] private float congratulationsTime = 0.25f;
 
     private readonly List<int> _chosenNumbers = new List<int>();
     private int _randomNumber;
     private int _correctNumber;
     private int _correctNumberIndex;
+    private int _correctAnswerCount;
+    private readonly int _correctAnswerThreshold = 10;
 
     public void Begin()
     {
         randomNumberText.gameObject.SetActive(true);
+        _correctAnswerCount = 0;
         NextNumber();
     }
     
@@ -67,7 +69,13 @@ public class TrackManager : Singleton<TrackManager>
     void RightChoice()
     {
         RemoveListeners();
+        _correctAnswerCount++;
         StartCoroutine(Congratulate());
+    }
+    
+    void WrongChoice()
+    {
+        //TODO: Encourage child
     }
 
     IEnumerator Congratulate()
@@ -75,7 +83,14 @@ public class TrackManager : Singleton<TrackManager>
         ActivateCongratulation(true);
         yield return new WaitForSeconds(congratulationsTime);
         ActivateCongratulation(false);
-        NextNumber();
+        if (_correctAnswerCount < _correctAnswerThreshold)
+        {
+            NextNumber();
+        }
+        else
+        {
+            GameOver();
+        }
     }
 
     void ActivateCongratulation(bool isActive)
@@ -93,7 +108,9 @@ public class TrackManager : Singleton<TrackManager>
         }
     }
 
-    void WrongChoice()
+    void GameOver()
     {
+        randomNumberText.gameObject.SetActive(false);
+        GameManager.Instance.SwitchState("GameOver");
     }
 }
