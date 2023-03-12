@@ -87,6 +87,8 @@ public class TrackManager : Singleton<TrackManager>
                 options[i].optionButton.onClick.AddListener(WrongChoice);
             }
         }
+
+        ActivateOptionButtons(true);
     }
 
     void RightChoice()
@@ -127,7 +129,7 @@ public class TrackManager : Singleton<TrackManager>
         congratulationsText.gameObject.LeanScale(new Vector3(1.2f, 1.2f, 1.2f), animationTime)
             .setEase(LeanTweenType.punch);
         randomNumberText.gameObject.SetActive(!isActive);
-        options.ForEach(p => p.gameObject.SetActive(!isActive));
+        ActivateOptionButtons(false);
     }
 
     void RemoveListeners()
@@ -136,6 +138,16 @@ public class TrackManager : Singleton<TrackManager>
         {
             option.optionButton.onClick.RemoveAllListeners();
         }
+    }
+
+    void ActivateOptionButtons(bool isActive)
+    {
+        options.ForEach(p => p.gameObject.SetActive(isActive));
+        if (isActive)
+        {
+            options.ForEach(p => p.gameObject.LeanRotateAroundLocal(Vector3.forward, 360, 0.25f));
+        }
+        options.ForEach(p => p.optionButton.interactable = isActive);
     }
 
     void GameOver()
