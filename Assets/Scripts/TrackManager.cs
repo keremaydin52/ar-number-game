@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class TrackManager : Singleton<TrackManager>
@@ -36,29 +37,41 @@ public class TrackManager : Singleton<TrackManager>
     void NextNumber()
     {
         ChooseRandomNumbers(options.Count);
-        AssignCorrectNumberFromList(_chosenNumbers);
-        AssignOptions();
-        loudOutSound.Play();
     }
     
     void ChooseRandomNumbers(int numbersCount)
     {
         _chosenNumbers.Clear();
         
-        while (_chosenNumbers.Count < numbersCount) {
+        while (_chosenNumbers.Count < numbersCount) 
+        {
             int randomNumber = Random.Range(1, 11);
             if (!_chosenNumbers.Contains(randomNumber)) 
             {
                 _chosenNumbers.Add(randomNumber);
             }
         }
+        StartCoroutine(AssignCorrectNumberFromList());
     }
 
-    void AssignCorrectNumberFromList(List<int> chosenNumbers)
+    IEnumerator AssignCorrectNumberFromList()
     {
-        _correctNumberIndex = Random.Range(0, chosenNumbers.Count);
-        _correctNumber = chosenNumbers[_correctNumberIndex];
+        _correctNumberIndex = Random.Range(0, _chosenNumbers.Count);
+        _correctNumber = _chosenNumbers[_correctNumberIndex];
+        
+        // Play animation before showing the correct number
+        float currentTime = 0f;
+        while (currentTime < 0.5f)
+        {
+            currentTime += Time.deltaTime;
+            int randomNumber = Random.Range(1, 11);
+            randomNumberText.text = randomNumber.ToString();
+            yield return null;
+        }
         randomNumberText.text = _correctNumber.ToString();
+        
+        AssignOptions();
+        loudOutSound.Play();
     }
 
     void AssignOptions()
@@ -110,9 +123,9 @@ public class TrackManager : Singleton<TrackManager>
     void ActivateCongratulation(bool isActive)
     {
         congratulationsText.gameObject.SetActive(isActive);
-        congratulationsText.transform.localScale = new Vector3(0.8f, 0.8f, 0.8f);
-        congratulationsText.gameObject.LeanScale(new Vector3(1.2f, 1.2f, 1.2f), 0.5f)
-            .setEase(LeanTweenType.linear);
+        float animationTime = congratulationsSound.clip.length / 3;
+        congratulationsText.gameObject.LeanScale(new Vector3(1.2f, 1.2f, 1.2f), animationTime)
+            .setEase(LeanTweenType.punch);
         randomNumberText.gameObject.SetActive(!isActive);
         options.ForEach(p => p.gameObject.SetActive(!isActive));
     }
