@@ -8,6 +8,8 @@
 /[Ll]ibrary/
 /[Uu]ser[Ss]ettings/
 
+/xcodeBuild/
+
 *.idea*
 
 *.stackdump
