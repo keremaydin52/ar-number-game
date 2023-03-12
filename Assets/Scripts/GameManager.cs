@@ -18,6 +18,7 @@ public class GameManager : Singleton<GameManager>
 
         for(int i = 0; i < states.Length; ++i)
         {
+            states[i].gameObject.SetActive(false);
             states[i].manager = this;
             _stateDict.Add(states[i].GetName(), states[i]);
         }

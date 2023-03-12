@@ -1,11 +1,15 @@
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class TrackManager : Singleton<TrackManager>
 {
     [SerializeField] private TextMeshPro randomNumberText;
+    [SerializeField] private TextMeshProUGUI congratulationsText;
     [SerializeField] private List<Option> options;
+    [SerializeField] private float congratulationsTime = 1;
 
     private readonly List<int> _chosenNumbers = new List<int>();
     private int _randomNumber;
@@ -62,9 +66,23 @@ public class TrackManager : Singleton<TrackManager>
 
     void RightChoice()
     {
-        print("RIGHT CHOICE");
         RemoveListeners();
+        StartCoroutine(Congratulate());
+    }
+
+    IEnumerator Congratulate()
+    {
+        ActivateCongratulation(true);
+        yield return new WaitForSeconds(congratulationsTime);
+        ActivateCongratulation(false);
         NextNumber();
+    }
+
+    void ActivateCongratulation(bool isActive)
+    {
+        congratulationsText.gameObject.SetActive(isActive);
+        randomNumberText.gameObject.SetActive(!isActive);
+        options.ForEach(p => p.gameObject.SetActive(!isActive));
     }
 
     void RemoveListeners()
@@ -77,6 +95,5 @@ public class TrackManager : Singleton<TrackManager>
 
     void WrongChoice()
     {
-        print("WRONG CHOICE");
     }
 }

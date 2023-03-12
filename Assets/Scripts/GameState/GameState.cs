@@ -27,7 +27,7 @@ public class GameState : AState
         return "Game";
     }
 
-    public void StartGame()
+    void StartGame()
     {
         TrackManager.Instance.Begin();
     }
